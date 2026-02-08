@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>من يفوز معي</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    text-align: center;
+}
+
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    border-radius: 15px;
+}
+
+h1 {
+    font-size: 36px;
+    color: gold;
+}
+
+.question {
+    font-size: 22px;
+    margin: 20px 0;
+}
+
+.answers button {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #1e88e5;
+    color: white;
+}
+
+.answers button:hover {
+    background: #1565c0;
+}
+
+.correct {
+    background: #2e7d32 !important;
+}
+
+.wrong {
+    background: #c62828 !important;
+}
+
+.score {
+    margin-top: 20px;
+    font-size: 20px;
+    color: yellow;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>من يفوز معي</h1>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="score" id="score"></div>
+</div>
+
+<script>
+const questions = [
+    { q: "أنا بداية كل شيء في السنة الهجرية، فمن أنا؟", a: ["رجب", "محرم", "شوال", "ذو الحجة"], correct: 1 },
+    { q: "كم عدد الركعات في صلاة المغرب؟", a: ["2", "3", "4", "5"], correct: 1 },
+    { q: "من هو الصحابي المعروف بلقب 'الفاروق'؟", a: ["أبو بكر الصديق", "عمر بن الخطاب", "عثمان بن عفان", "علي بن أبي طالب"], correct: 1 },
+    { q: "أنا لا تُرى لكن تسمع، أُسمع في المساجد قبل الصلاة، فمن أنا؟", a: ["الأذان", "الصلاة", "القرآن", "الخطبة"], correct: 0 }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (current >= questions.length) {
+        document.querySelector(".container").innerHTML = `
+            <h1>🎉 مبروك!</h1>
+            <p>لقد أنهيت اللعبة</p>
+            <p>نقاطك: ${score}</p>`;
+        return;
+    }
+
+    const q = questions[current];
+    document.getElementById("question").textContent = q.q;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.a.forEach((answer, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(btn, index);
+        answersDiv.appendChild(btn);
+    });
+
+    document.getElementById("score").textContent = `النقاط: ${score}`;
+}
+
+function checkAnswer(button, index) {
+    const correctIndex = questions[current].correct;
+    const buttons = document.querySelectorAll(".answers button");
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (index === correctIndex) {
+        button.classList.add("correct");
+        score += 100;
+    } else {
+        button.classList.add("wrong");
+        buttons[correctIndex].classList.add("correct");
+    }
+
+    setTimeout(() => {
+        current++;
+        loadQuestion();
+    }, 1000);
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
